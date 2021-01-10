@@ -66,10 +66,6 @@ def delete_encouragements(index):
         db["encouragements"] = encouragements
 
 
-@bot.command()
-async def ping(ctx):
-  await ctx.send(f'Latency is {round(bot.latency * 1000)}ms')
-
 @client.event
 async def on_ready():
     print("We have logged in as {0.user}".format(client))
