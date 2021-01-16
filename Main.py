@@ -6,6 +6,8 @@ import requests
 import random
 from replit import db
 from keep_alive import keep_alive
+from bs4 import BeautifulSoup
+from PyDictionary import PyDictionary
 
 client = discord.Client()
 bot = commands.Bot(command_prefix = "$", case_sensitive=True)
@@ -65,6 +67,12 @@ def delete_encouragements(index):
         del encouragements[index]
         db["encouragements"] = encouragements
 
+def SearchWord(word):
+  try:
+    myDict = PyDictionary(word)
+    return(myDict.getMeanings())
+  except:
+    return("Not Found")
 
 @client.event
 async def on_ready():
@@ -116,6 +124,7 @@ async def on_message(message):
       7.$predictmyday - gives a prediction for your day
       8.$suggest - this is a new bot so i am looking for suggstions to update, it works same as new command
       9.$joke - gets you a random joke
+      10.$meaning - tells you the meaning of the specific word
       ''')
       
     if msg.startswith("$predictmyday"):
@@ -135,6 +144,11 @@ async def on_message(message):
     if msg.startswith("$joke"):
       joke = get_joke()
       await message.channel.send(joke)
+
+    if msg.startswith("$meaning"):
+      meaningWord = msg.split("$meaning", 1)[1]
+      meaning = SearchWord(meaningWord)
+      await message.channel.send(meaning)
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
