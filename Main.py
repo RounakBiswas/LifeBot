@@ -43,6 +43,14 @@ def get_joke():
   jokes = g.json()
   return(f"{jokes['setup']} \n {jokes['punchline']}")
 
+def get_fact():
+  url = "https://uselessfacts.jsph.pl/random.json?language=en"
+
+  response = requests.request("GET", url)
+  data = json.loads(response.text)
+  useless_fact = data['text']
+  return(useless_fact)
+
 
 def update_encouragements(encouraging_message):
     if "encouragements" in db.keys():
@@ -125,6 +133,7 @@ async def on_message(message):
       8.$suggest - this is a new bot so i am looking for suggstions to update, it works same as new command
       9.$joke - gets you a random joke
       10.$meaning - tells you the meaning of the specific word
+      11.$fact - Gives you a random fact
       ''')
       
     if msg.startswith("$predictmyday"):
@@ -149,6 +158,10 @@ async def on_message(message):
       meaningWord = msg.split("$meaning", 1)[1]
       meaning = SearchWord(meaningWord)
       await message.channel.send(meaning)
+
+    if msg.startswith("$fact"):
+      fact = get_fact()
+      await message.channel.send(fact)
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
